@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, Outlet,  useLocation, useNavigate } from "react-router-dom";
 import { AiFillHome } from "react-icons/ai";
 import { BsPeople } from "react-icons/bs";
 import { AiOutlineDashboard } from "react-icons/ai";
 import useAuth from "../hooks/useAuth/useAuth";
 import Swal from "sweetalert2";
+import { Toaster, toast } from "react-hot-toast";
+import { TaskContext } from "../TaskProvider/TaskProvider";
 
 const Main = () => {
   const { user, logOut } = useAuth();
@@ -17,10 +19,16 @@ const navigate=useNavigate()
   const [priority, setPriority] = useState("");
   const [assignTask, setAssignTask] = useState("");
 
+  const{tasks, addTask, removeTask}=useContext(TaskContext)
+
+
   let handleSubmit = (e) => {
 
     e.preventDefault();
-
+if(title===''||description===''||dueDate===""||priority===''||assignTask===''){
+  toast.error("Please Fill up all")
+  return;
+}
     let task={
       title,
 description,
@@ -31,13 +39,7 @@ ownerEmail:user?.email,
 status:'pending'
     }
 
-    const existingTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
-
-    existingTasks.push(task);
-  
-   
-    localStorage.setItem("tasks", JSON.stringify(existingTasks));
+    addTask(task)
 
     Swal.fire({
       position: 'top-end',
@@ -50,6 +52,7 @@ status:'pending'
   };
   return (
     <>
+
       <section className="grid lg:grid-cols-12 grid-cols-1">
         <div className="lg:col-span-2 hidden lg:block">
           <div className="min-h-screen bg-white pt-16">
@@ -117,6 +120,10 @@ status:'pending'
                 Add Task +
               </button>}
               <dialog id="my_modal_1" className="modal">
+              <Toaster
+  position="top-center"
+  reverseOrder={false}
+/>
                 <div className="modal-box text-start">
                   <h3 className="font-bold text-lg">Add</h3>
                   <form>
@@ -176,6 +183,7 @@ status:'pending'
                         onChange={(e) => setAssignTask(e.target.value)}
                         required
                       >
+     <option >Assign Task</option>
                         {userList.filter((x)=>x?.email!==user?.email).map((x,index)=><option key={index} value={x?.name}>{x?.name}</option>)}
 
                
@@ -193,6 +201,7 @@ status:'pending'
                         onChange={(e) => setPriority(e.target.value)}
                         required
                       >
+                        <option >Select Priority</option>
                         <option value="low">Low</option>
                         <option value="medium">Medium</option>
                         <option value="high">High</option>

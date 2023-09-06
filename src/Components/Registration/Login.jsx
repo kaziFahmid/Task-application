@@ -55,7 +55,7 @@ const Login = () => {
               If you have no account, please Signup
             </p>
 
-            <di className="mt-6" action="#" method="POST">
+            <div className="mt-6" action="#" method="POST">
               <div>
                 <label className="block text-gray-700">Email Address</label>
                 <input
@@ -120,7 +120,7 @@ const Login = () => {
               >
                 Log In
               </button>
-            </di>
+            </div>
 
             <div className="mt-7 grid grid-cols-3 items-center text-gray-500">
               <hr className="border-gray-500" />

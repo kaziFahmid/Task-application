@@ -12,6 +12,7 @@ import Dashboard from './Components/Dashboard/Dashboard';
 import Login from './Components/Registration/Login';
 import Signup from './Components/Registration/Signup';
 import AuthProvider from './Components/AuthProvider/AuthProvider';
+import { TaskProvider } from './Components/TaskProvider/TaskProvider';
 
 
 const router = createBrowserRouter([
@@ -46,7 +47,10 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
  <AuthProvider>
- <RouterProvider router={router} />
+<TaskProvider>
+<RouterProvider router={router} />
+</TaskProvider>
+
  </AuthProvider>
 
   </React.StrictMode>,
