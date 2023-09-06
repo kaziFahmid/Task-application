@@ -34,17 +34,7 @@ export default function AuthProvider({children}) {
         const unsubscribe=onAuthStateChanged(auth,currentUser=>{
             setUser(currentUser)
 
-            if(currentUser){
-                axios.post('/jwt',{email:currentUser.email})
-                .then(res=>{
-                  localStorage.setItem('access-token',res.token)
-              
-                })
-            }
-            else{
-                localStorage.removeItem('access-token')
-
-            }
+        
             setLoading(false)
         })
 

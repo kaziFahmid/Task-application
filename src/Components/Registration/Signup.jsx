@@ -1,28 +1,61 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth/useAuth";
 
+import Swal from "sweetalert2";
+import { updateProfile } from "firebase/auth";
 const Signup = () => {
+
   const { createUser } = useAuth();
+  let navigate = useNavigate()
+  let location = useLocation();
+  let from = location.state?.from?.pathname || "/";
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
+  const onSubmit = (data) => {
+    createUser(data.email, data.password)
+      .then((result) => {
+        const user = result.user;
+  console.log(user)
+        updateProfile(user, {
+          displayName: data.username,
+          photoURL: data.picture, 
+        })
+          .then(() => {
+            const newUser = {
+              name: user.displayName,
+              email: user.email,
+              bio: data.bio,
+              photo: user.photoURL,
+              role: "user",
+            };
 
-  const onSubmit = async (data) => {
-    try {
-      await createUser(data);
-      // Optionally, you can redirect the user after successful signup
-      // Replace "/dashboard" with your desired route
-      // history.push("/dashboard");
-    } catch (error) {
-      // Handle error (e.g., show an error message)
-      console.error("Signup failed:", error);
-    }
+            const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
+
+
+            existingUsers.push(newUser);
+  
+    
+            localStorage.setItem("users", JSON.stringify(existingUsers));
+
+            Swal.fire("Success!", "User registration successful!", "success");
+
+       
+            navigate(from, { replace: true });
+          })
+          .catch((error) => {
+            console.error("Error updating profile:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error creating user:", error);
+      });
   };
-
+  
   return (
     <>
       <section className="border-red-500 bg-gray-200 min-h-screen flex items-center justify-center">

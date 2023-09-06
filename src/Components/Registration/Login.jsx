@@ -1,10 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Lottie from 'react-lottie';
 import data from './data.json';
 import { useForm } from 'react-hook-form';
+import Swal from 'sweetalert2';
+import useAuth from '../hooks/useAuth/useAuth';
 
 const Login = () => {
+    const{signInUser}=useAuth()
+    let navigate = useNavigate()
+    let location = useLocation();
+    let from = location.state?.from?.pathname || "/";
   const {
     handleSubmit,
     register,
@@ -21,8 +27,16 @@ const Login = () => {
   };
 
   const onSubmit = async (data) => {
-    // Handle login logic here
-    console.log(data);
+ signInUser(data.email, data.password)
+      .then((result) => {
+        const user = result.user;
+        Swal.fire('Login Done')
+    navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
   };
 
   return (
@@ -41,7 +55,7 @@ const Login = () => {
               If you have no account, please Signup
             </p>
 
-            <div className="mt-6" action="#" method="POST">
+            <di className="mt-6" action="#" method="POST">
               <div>
                 <label className="block text-gray-700">Email Address</label>
                 <input
@@ -106,7 +120,7 @@ const Login = () => {
               >
                 Log In
               </button>
-            </div>
+            </di>
 
             <div className="mt-7 grid grid-cols-3 items-center text-gray-500">
               <hr className="border-gray-500" />

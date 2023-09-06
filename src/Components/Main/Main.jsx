@@ -1,10 +1,13 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLoaderData, useLocation } from "react-router-dom";
 import { AiFillHome } from "react-icons/ai";
 import { BsPeople } from "react-icons/bs";
 import { AiOutlineDashboard } from "react-icons/ai";
+import useAuth from "../hooks/useAuth/useAuth";
 
 const Main = () => {
+  const {user,logOut}=useAuth()
+  const location=useLocation()
   return (
     <>
       <section className="grid lg:grid-cols-12 grid-cols-1">
@@ -19,20 +22,20 @@ const Main = () => {
 
             <ul className="mt-36 ms-10">
               <Link to="/">
-                <li className="flex place-items-center items-center gap-3 hover:bg-slate-200 hover:p-2 hover:rounded-s-lg duration-200 cursor-pointer hover:text-blue-500">
+                <li className={`${location.pathname==='/'? 'bg-slate-200 flex place-items-center items-center gap-3  p-2  rounded-s-lg text-blue-500 ':'flex place-items-center items-center gap-3 hover:bg-slate-200 hover:p-2 hover:rounded-s-lg duration-200 cursor-pointer hover:text-blue-500' } `}>
                   <AiFillHome />
                   <span>Home</span>
                 </li>
               </Link>
               <Link to="/createteam">
-                <li className="flex place-items-center items-center gap-3 hover:bg-slate-200 hover:p-2 hover:rounded-s-lg mt-4 duration-200 cursor-pointer hover:text-blue-500">
+                <li className={`${location.pathname==="/createteam"? 'bg-slate-200 flex place-items-center items-center gap-3  p-2  rounded-s-lg text-blue-500 ':'flex place-items-center items-center gap-3 hover:bg-slate-200 hover:p-2 hover:rounded-s-lg duration-200 cursor-pointer hover:text-blue-500' }  mt-4`}>
                   <BsPeople />
                   <span>Create Team</span>
                 </li>
               </Link>
 
               <Link to="/dashboard">
-                <li className="flex place-items-center items-center gap-3 hover:bg-slate-200 hover:p-2 hover:rounded-s-lg mt-4 duration-200  cursor-pointer hover:text-blue-500">
+                <li className={`${location.pathname==="/dashboard"? 'bg-slate-200 flex place-items-center items-center gap-3  p-2  rounded-s-lg text-blue-500 ':'flex place-items-center items-center gap-3 hover:bg-slate-200 hover:p-2 hover:rounded-s-lg duration-200 cursor-pointer hover:text-blue-500' } mt-4`}>
                   <AiOutlineDashboard />
                   <span>Dashboard</span>
                 </li>
@@ -50,29 +53,36 @@ const Main = () => {
           <div className="min-h-screen">
             <div className="navbar  pt-6 text-neutral-content items-center flex justify-end">
               <div className="text-black flex gap-6 justify-center items-center">
-                <div className="avatar">
+             
+               {user?.email&& <div className="avatar">
                   <div className="w-14 rounded-full">
-                    <img src="/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                    <img src={user?.photoURL} />
                   </div>
                 </div>
-
-                <div>
-                  <h5 className="font-semibold">sdafsadf</h5>
-                  <p>sdafasdf</p>
-                </div>
+}
+               {user?.email&& <div>
+                  <h5 className="font-semibold">{user?.displayName}</h5>
+                 
+                </div>}
                 <ul className="flex justify-center items-center gap-5">
-                  <li>
+                {user?.email? <li>
+              
+                      <button onClick={logOut} className="btn bg-blue-600 text-white px-5">
+                        Logout
+                      </button>
+                  
+                  </li>: <li>
                     <Link to="/login">
                       <button className="btn bg-blue-600 text-white px-5">
                         Login
                       </button>
                     </Link>
-                  </li>
-                  <li>
+                  </li>} 
+                 {!user?.email&& <li>
                     <Link to="/signup">
                       <button className="btn   px-5"> Signup</button>
                     </Link>
-                  </li>
+                  </li>}
                 </ul>
               </div>
             </div>
