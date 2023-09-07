@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, Outlet,  useLocation, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { AiFillHome } from "react-icons/ai";
 import { BsPeople } from "react-icons/bs";
 import { AiOutlineDashboard } from "react-icons/ai";
@@ -11,48 +11,87 @@ import { TaskContext } from "../TaskProvider/TaskProvider";
 const Main = () => {
   const { user, logOut } = useAuth();
   const location = useLocation();
-  const[userList,setUserList]=useState(JSON.parse(localStorage.getItem('users')))
-const navigate=useNavigate()
+  const navigate = useNavigate();
+  const [userList, setUserList] = useState(JSON.parse(localStorage.getItem('users')));
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [priority, setPriority] = useState("");
   const [assignTask, setAssignTask] = useState("");
+  const { tasks, addTask, removeTask,addTeamTask } = useContext(TaskContext);
 
-  const{tasks, addTask, removeTask}=useContext(TaskContext)
-
-
-  let handleSubmit = (e) => {
-
+  const handleSubmit = (e) => {
     e.preventDefault();
-if(title===''||description===''||dueDate===""||priority===''||assignTask===''){
-  toast.error("Please Fill up all")
-  return;
-}
-    let task={
-      title,
-description,
-dueDate,
-priority,
-assignTask,
-ownerEmail:user?.email,
-status:'pending'
+    if (title === '' || description === '' || dueDate === "" || priority === '' || assignTask === '') {
+      toast.error("Please fill out all fields.");
+      return;
     }
-
-    addTask(task)
-
+    let task = {
+      title,
+      description,
+      dueDate,
+      priority,
+      assignTask,
+      ownerEmail: user?.email,
+      status: 'pending'
+    };
+    addTask(task);
     Swal.fire({
       position: 'top-end',
       icon: 'success',
       title: 'Task successfully added!',
       showConfirmButton: false,
       timer: 1500
-    })
- 
+    });
   };
+
+  const [teamName, setTeamName] = useState('');
+  const [selectedMembers, setSelectedMembers] = useState([]);
+  const [teamTaskName, setTeamTaskName] = useState('');
+  const [memberOptions] = useState(JSON.parse(localStorage.getItem('users')) || []);
+const[teamTaskDesc,setTeamTaskDesc]=useState('')
+  const handleSubmit1 = (e) => {
+    e.preventDefault();
+    if(teamName===''||
+      selectedMembers===''||
+      teamTaskName===''||
+      teamTaskDesc===''){
+        toast.error("Please fill out all fields.");
+return;
+    }
+   let teamTask={
+    teamName,
+selectedMembers,
+teamTaskName,
+teamTaskDesc,
+status:'pending'
+   }
+   addTeamTask(teamTask)
+   Swal.fire({
+    position: 'top-end',
+    icon: 'success',
+    title: 'Task successfully added!',
+    showConfirmButton: false,
+    timer: 1500
+  });
+  };
+
+  const handleMemberChange = (e, member) => {
+    const memberName = member.name; // Get the member name
+    if (e.target.checked) {
+      setSelectedMembers((prevSelectedMembers) => [
+        ...prevSelectedMembers,
+        memberName,
+      ]); // Add member name to the selectedMembers array
+    } else {
+      setSelectedMembers((prevSelectedMembers) =>
+        prevSelectedMembers.filter((name) => name !== memberName)
+      ); // Remove member name from selectedMembers
+    }
+  };
+
   return (
     <>
-
       <section className="grid lg:grid-cols-12 grid-cols-1">
         <div className="lg:col-span-2 hidden lg:block">
           <div className="min-h-screen bg-white pt-16">
@@ -62,7 +101,6 @@ status:'pending'
                 className="img-fluid mx-auto"
               />
             </div>
-
             <ul className="mt-36 ms-10">
               <Link to="/">
                 <li
@@ -88,7 +126,6 @@ status:'pending'
                   <span>Create Team</span>
                 </li>
               </Link>
-
               <Link to="/dashboard">
                 <li
                   className={`${
@@ -102,28 +139,29 @@ status:'pending'
                 </li>
               </Link>
             </ul>
-
             <div className="text-center mt-40">
-           {!user?.email?<button
-                className=" btn bg-blue-500 text-white px-9 hover:-translate-y-3 duration-200 shadow-md"
-                onClick={()=>navigate('/login')}
-              >
-                {" "}
-                Add Task +
-              </button>:   <button
-                className=" btn bg-blue-500 text-white px-9 hover:-translate-y-3 duration-200 shadow-md"
-                onClick={() =>
-                  document.getElementById("my_modal_1").showModal()
-                }
-              >
-                {" "}
-                Add Task +
-              </button>}
+              {!user?.email ? (
+                <button
+                  className=" btn bg-blue-500 text-white px-9 hover:-translate-y-3 duration-200 shadow-md"
+                  onClick={() => navigate('/login')}
+                >
+                  Add Task +
+                </button>
+              ) : (
+                <button
+                  className=" btn bg-blue-500 text-white px-9 hover:-translate-y-3 duration-200 shadow-md"
+                  onClick={() =>
+                    document.getElementById("my_modal_1").showModal()
+                  }
+                >
+                  Add Task +
+                </button>
+              )}
               <dialog id="my_modal_1" className="modal">
-              <Toaster
-  position="top-center"
-  reverseOrder={false}
-/>
+                <Toaster
+                  position="top-center"
+                  reverseOrder={false}
+                />
                 <div className="modal-box text-start">
                   <h3 className="font-bold text-lg">Add</h3>
                   <form>
@@ -168,7 +206,6 @@ status:'pending'
                         required
                       />
                     </div>
-
                     <div className="mb-4">
                       <label
                         htmlFor="assigntask"
@@ -183,13 +220,12 @@ status:'pending'
                         onChange={(e) => setAssignTask(e.target.value)}
                         required
                       >
-     <option >Assign Task</option>
-                        {userList.filter((x)=>x?.email!==user?.email).map((x,index)=><option key={index} value={x?.name}>{x?.name}</option>)}
-
-               
+                        <option>Assign Task</option>
+                        {userList?.filter((x) => x?.email !== user?.email)?.map((x, index) => (
+                          <option key={index} value={x?.name}>{x?.name}</option>
+                        ))}
                       </select>
                     </div>
-
                     <div className="mb-4">
                       <label htmlFor="priority" className="block text-gray-600">
                         Priority:
@@ -201,7 +237,7 @@ status:'pending'
                         onChange={(e) => setPriority(e.target.value)}
                         required
                       >
-                        <option >Select Priority</option>
+                        <option>Select Priority</option>
                         <option value="low">Low</option>
                         <option value="medium">Medium</option>
                         <option value="high">High</option>
@@ -226,7 +262,93 @@ status:'pending'
         </div>
         <div className="lg:col-span-10">
           <div className="min-h-screen">
-            <div className="navbar  pt-6 text-neutral-content items-center flex justify-end">
+            <div className={`navbar  pt-6 text-neutral-content items-center flex ${location.pathname === '/createteam' ? 'justify-between' : 'justify-end'}`}>
+              {location.pathname === '/createteam' && (
+                <div>
+                  <button className="btn text-white bg-blue-500" onClick={() => document.getElementById('my_modal_2').showModal()}>Create Team +</button>
+                  <dialog id="my_modal_2" className="modal text-black">
+                  <Toaster
+                  position="top-center"
+                  reverseOrder={false}
+                />
+                    <div className="modal-box">
+                      <h2 className="text-2xl font-semibold mb-4">Create a Team</h2>
+                      <div className="bg-white p-6 rounded">
+                        <div className="mb-4">
+                          <label htmlFor="teamName" className="block text-gray-700 font-bold mb-2">
+                            Team Name
+                          </label>
+                          <input
+                            type="text"
+                            id="teamName"
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                            placeholder="Enter Team Name"
+                            value={teamName}
+                            onChange={(e) => setTeamName(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="mb-4">
+                          <label htmlFor="taskName" className="block text-gray-700 font-bold mb-2">
+                            Task Name
+                          </label>
+                          <input
+                            type="text"
+                            id="taskName"
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                            placeholder="Enter Task Name"
+                            value={teamTaskName}
+                            onChange={(e) => setTeamTaskName(e.target.value)}
+                            required
+                          />
+                        </div>
+
+                        <div className="mb-4">
+                          <label htmlFor="description" className="block text-gray-700 font-bold mb-2">
+                            Task Description
+                          </label>
+                         <textarea  type="text"
+                            id="description"
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                            placeholder="Enter Task Description"
+                            value={teamTaskDesc}
+                            onChange={(e) => setTeamTaskDesc(e.target.value)}
+                            required>
+                        
+                         </textarea>
+                        </div>
+                        <div className="mb-4 overflow-y-auto h-36">
+  <label className="block text-gray-700 font-bold mb-2">Invite Team Members</label>
+  {memberOptions?.filter((x)=>x.name !==user?.displayName)?.map((member, index) => (
+    <div key={index} className="flex items-center mb-2">
+      <input
+        type="checkbox"
+        value={index}
+        onChange={(e) => handleMemberChange(e, member)} // Pass the member object to handleMemberChange
+        checked={selectedMembers.includes(member.name)}
+        className="mr-2"
+      />
+      <label htmlFor={index}>{member.name}</label>
+    </div>
+  ))}
+</div>
+                      </div>
+                      <div className="modal-action">
+                        <form method="dialog" className="flex justify-center items-center gap-5">
+                          <button
+                            className="btn bg-blue-500 text-white px-6"
+                            onClick={handleSubmit1}
+                            type="button"
+                          >
+                            Submit
+                          </button>
+                          <button className="btn bg-red-500 text-white">Close</button>
+                        </form>
+                      </div>
+                    </div>
+                  </dialog>
+                </div>
+              )}
               <div className="text-black flex gap-6 justify-center items-center">
                 {user?.email && (
                   <div className="avatar">
@@ -262,16 +384,14 @@ status:'pending'
                   {!user?.email && (
                     <li>
                       <Link to="/signup">
-                        <button className="btn   px-5"> Signup</button>
+                        <button className="btn px-5"> Signup</button>
                       </Link>
                     </li>
                   )}
                 </ul>
               </div>
             </div>
-
-  <Outlet />
-
+            <Outlet />
           </div>
         </div>
       </section>

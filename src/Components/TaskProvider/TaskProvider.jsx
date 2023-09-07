@@ -11,12 +11,31 @@ export const TaskProvider = ({ children }) => {
 
 
   const [tasks, setTasks] = useState(JSON.parse(localStorage.getItem('tasks')) || []);
-console.log(tasks)
-  // Step 4: Define functions to update the task state
+  const [teamTasks, setTeamTasks] = useState(JSON.parse(localStorage.getItem('teamtasks')) || []);
+
   const addTask = (task) => {
     const updatedTasks = [...tasks, task];
     setTasks(updatedTasks);
     localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+  };
+  const addTeamTask = (task) => {
+    const updatedTasks = [...teamTasks, task];
+    setTeamTasks(updatedTasks);
+    localStorage.setItem('teamtasks', JSON.stringify(updatedTasks));
+  };
+
+  const removeTeamTask = (taskId) => {
+  
+    const updatedTasks = teamTasks.filter((task,index) => index !== taskId);
+    setTeamTasks(updatedTasks);
+    localStorage.setItem('teamtasks', JSON.stringify(updatedTasks));
+    Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: ' Task Removed',
+        showConfirmButton: false,
+        timer: 1500
+      })
   };
 
 
@@ -53,7 +72,7 @@ console.log(tasks)
 
  
   return (
-    <TaskContext.Provider value={{ tasks, addTask, removeTask,handleAccept,handleComplete }}>
+    <TaskContext.Provider value={{ tasks,teamTasks, addTask, removeTask,handleAccept,handleComplete,addTeamTask,removeTeamTask }}>
       {children}
     </TaskContext.Provider>
   );
