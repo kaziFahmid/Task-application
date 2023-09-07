@@ -13,6 +13,7 @@ import Login from './Components/Registration/Login';
 import Signup from './Components/Registration/Signup';
 import AuthProvider from './Components/AuthProvider/AuthProvider';
 import { TaskProvider } from './Components/TaskProvider/TaskProvider';
+import AllUsers from './Components/AllUsers/AllUsers';
 
 
 const router = createBrowserRouter([
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home/>,
+      },
+      {
+        path:'/allusers',
+        element:<AllUsers/>
       },
       {
         path: "/createteam",
