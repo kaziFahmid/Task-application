@@ -13,8 +13,8 @@ const TeamCard = ({teamName, teamTaskDesc,selectedMembers,teamTaskName,status,in
     <div className='bg-white shadow-sm w-full px-6 py-6 rounded-lg mt-5'>
    
       <div className='flex justify-between items-center'>
-       <div className='flex flex-col gap-2 md:flex-row'>
-       <h1 className='text-center text-black font-semibold'>{teamName}</h1>
+       <div >
+       <h1 className='text-center text-black font-semibold mb-4'>{teamName}</h1>
         <div className='text-black'>
           <h1 className='font-semibold'> {teamTaskName}</h1>
         </div>
@@ -28,7 +28,7 @@ const TeamCard = ({teamName, teamTaskDesc,selectedMembers,teamTaskName,status,in
   <h6 className='text-black font-semibold mb-2'>Description</h6>
   <p className='text-justify'>{teamTaskDesc}</p>
 </div>
-<div className='flex justify-between items-center mt-6'>
+<div className='flex justify-between items-center mt-10'>
   <div>
 
 

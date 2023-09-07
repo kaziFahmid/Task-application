@@ -163,7 +163,7 @@ const Main = () => {
                 </li>
               </Link>
             </ul>
-            <div className="text-center mt-40">
+            <div className="text-center mt-28">
               {!user?.email ? (
                 <button
                   className=" btn bg-blue-500 text-white px-9 hover:-translate-y-3 duration-200 shadow-md"
@@ -298,13 +298,13 @@ const Main = () => {
                     <button
                       className="btn text-white bg-blue-500"
                       onClick={() =>
-                        document.getElementById("my_modal_2").showModal()
+                        document.getElementById("my_modal_6").showModal()
                       }
                     >
                       Create Team +
                     </button>
                   )}
-                  <dialog id="my_modal_2" className="modal text-black">
+                  <dialog id="my_modal_6" className="modal text-black">
                     <Toaster position="top-center" reverseOrder={false} />
                     <div className="modal-box">
                       <h2 className="text-2xl font-semibold mb-4">
