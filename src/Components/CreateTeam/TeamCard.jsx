@@ -13,11 +13,13 @@ const TeamCard = ({teamName, teamTaskDesc,selectedMembers,teamTaskName,status,in
     <div className='bg-white shadow-sm w-full px-6 py-6 rounded-lg mt-5'>
    
       <div className='flex justify-between items-center'>
-        <h1 className='text-center text-black font-semibold'>{teamName}</h1>
+       <div className='flex flex-col gap-2 md:flex-row'>
+       <h1 className='text-center text-black font-semibold'>{teamName}</h1>
         <div className='text-black'>
           <h1 className='font-semibold'> {teamTaskName}</h1>
         </div>
-{user?.email&&   <div className='flex justify-center items-center gap-2'>
+       </div>
+{user?.email&&   <div className='flex flex-col lg:flex-row justify-center items-center gap-2'>
 <button className='btn bg-green-500 text-white ' disabled={matchingUserObjects?.some((x)=>x?.name===user?.displayName)} onClick={()=>handleTeamTaskComplete(index)}>Complete</button>
 <button disabled={matchingUserObjects?.some((x)=>x?.name===user?.displayName)} className='btn bg-red-500 text-white'><FaTrashAlt className='text-lg 'onClick={()=>removeTeamTask(index)}/></button>
 </div>}

@@ -53,7 +53,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center max-w-5xl mx-auto mt-6">
+      <div className="flex lg:flex-row flex-col justify-between items-center max-w-5xl mx-auto mt-6">
 <div>
 <div className="dropdown dropdown-start">
           <label tabIndex={0} className="btn m-1">
@@ -76,7 +76,7 @@ const Home = () => {
             Sort By Due Date
           </label>
           <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-          {tasks.map((x,index)=>  <li key={index}>
+          {tasks?.map((x,index)=>  <li key={index}>
               <a onClick={() => handleSortDueDate(x?.dueDate)}>{x?.dueDate}</a>
             </li>)}
          

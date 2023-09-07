@@ -120,9 +120,9 @@ const Main = () => {
                     location.pathname === "/allusers"
                       ? "bg-slate-200 flex place-items-center items-center gap-3  p-2  rounded-s-lg text-blue-500 "
                       : "flex place-items-center items-center gap-3 hover:bg-slate-200 hover:p-2 hover:rounded-s-lg duration-200 cursor-pointer hover:text-blue-500"
-                  } `}
+                  } mb-4`}
                 >
-                   <BsPeople />
+                 <BsPeople />
                   <span>Allusers</span>
                 </li>
               </Link>
@@ -132,7 +132,7 @@ const Main = () => {
                     location.pathname === "/"
                       ? "bg-slate-200 flex place-items-center items-center gap-3  p-2  rounded-s-lg text-blue-500 "
                       : "flex place-items-center items-center gap-3 hover:bg-slate-200 hover:p-2 hover:rounded-s-lg duration-200 cursor-pointer hover:text-blue-500"
-                  } mt-4`}
+                  } `}
                 >
                   <AiFillHome />
                   <span>Home</span>
@@ -287,8 +287,201 @@ const Main = () => {
         </div>
         <div className="lg:col-span-10">
           <div className="min-h-screen">
+            <div className="flex lg:hidden justify-between items-center pt-4">
+              <div>
+                
+              {location.pathname === "/createteam" && (
+                <div>
+                  {!user?.email ? (
+                    ""
+                  ) : (
+                    <button
+                      className="btn text-white bg-blue-500"
+                      onClick={() =>
+                        document.getElementById("my_modal_2").showModal()
+                      }
+                    >
+                      Create Team +
+                    </button>
+                  )}
+                  <dialog id="my_modal_2" className="modal text-black">
+                    <Toaster position="top-center" reverseOrder={false} />
+                    <div className="modal-box">
+                      <h2 className="text-2xl font-semibold mb-4">
+                        Create a Team
+                      </h2>
+                      <div className="bg-white p-6 rounded">
+                        <div className="mb-4">
+                          <label
+                            htmlFor="teamName"
+                            className="block text-gray-700 font-bold mb-2"
+                          >
+                            Team Name
+                          </label>
+                          <input
+                            type="text"
+                            id="teamName"
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                            placeholder="Enter Team Name"
+                            value={teamName}
+                            onChange={(e) => setTeamName(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="mb-4">
+                          <label
+                            htmlFor="taskName"
+                            className="block text-gray-700 font-bold mb-2"
+                          >
+                            Task Name
+                          </label>
+                          <input
+                            type="text"
+                            id="taskName"
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                            placeholder="Enter Task Name"
+                            value={teamTaskName}
+                            onChange={(e) => setTeamTaskName(e.target.value)}
+                            required
+                          />
+                        </div>
+
+                        <div className="mb-4">
+                          <label
+                            htmlFor="description"
+                            className="block text-gray-700 font-bold mb-2"
+                          >
+                            Task Description
+                          </label>
+                          <textarea
+                            type="text"
+                            id="description"
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                            placeholder="Enter Task Description"
+                            value={teamTaskDesc}
+                            onChange={(e) => setTeamTaskDesc(e.target.value)}
+                            required
+                          ></textarea>
+                        </div>
+                        <div className="mb-4 overflow-y-auto h-36">
+                          <label className="block text-gray-700 font-bold mb-2">
+                            Invite Team Members
+                          </label>
+                          {memberOptions
+                            ?.filter((x) => x?.name !== user?.displayName)
+                            ?.map((member, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center mb-2"
+                              >
+                                <input
+                                  type="checkbox"
+                                  value={index}
+                                  onChange={(e) =>
+                                    handleMemberChange(e, member)
+                                  } // Pass the member object to handleMemberChange
+                                  checked={selectedMembers.includes(
+                                    member.name
+                                  )}
+                                  className="mr-2"
+                                />
+                                <label htmlFor={index}>{member?.name}</label>
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                      <div className="modal-action">
+                        <form
+                          method="dialog"
+                          className="flex justify-center items-center gap-5"
+                        >
+                          <button
+                            className="btn bg-blue-500 text-white px-6"
+                            onClick={handleSubmit1}
+                            type="button"
+                          >
+                            Submit
+                          </button>
+                          <button className="btn bg-red-500 text-white">
+                            Close
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </dialog>
+                </div>
+              )}
+
+              </div>
+             {/* navmenu */}
+             <div>
+             <div className="dropdown dropdown-end">
+  <label tabIndex={0} className="btn m-1 text-2xl text-blue-500">=</label>
+  <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+    <li><a> {user?.email && (
+                  <div className="avatar">
+                    <div className="w-14 rounded-full">
+                      <img src={user?.photoURL} />
+                    </div>
+                  </div>
+                )}</a>
+                
+               {user?.email&&<a>{user?.displayName}</a>} 
+
+                
+                </li>
+    <li>
+      {user?.email?<a onClick={logOut} >logout</a>:<Link to='/login'>Login</Link>}
+    </li>
+{!user?.email&&
+    <li>
+     <a>Signup</a>
+    </li>}
+
+ <Link to="/allusers">
+                <li
+                 
+                >
+                
+                  <span>Allusers</span>
+                </li>
+              </Link>
+              <Link to="/">
+                <li
+                 
+                >
+             
+                  <span>Home</span>
+                </li>
+              </Link>
+              <Link to="/createteam">
+                <li
+                  
+                >
+                  
+                  <span>Create Team</span>
+                </li>
+              </Link>
+              <Link to="/dashboard">
+                <li
+                 
+                >
+                
+                  <span>Dashboard</span>
+                </li>
+              </Link>
+
+
+
+
+
+
+  </ul>
+</div>
+</div>
+            </div>
             <div
-              className={`navbar  pt-6 text-neutral-content items-center flex ${
+              className={`navbar  pt-6 text-neutral-content items-center hidden lg:flex ${
                 location.pathname === "/createteam"
                   ? "justify-between"
                   : "justify-end"
@@ -389,7 +582,7 @@ const Main = () => {
                                   )}
                                   className="mr-2"
                                 />
-                                <label htmlFor={index}>{member.name}</label>
+                                <label htmlFor={index}>{member?.name}</label>
                               </div>
                             ))}
                         </div>
